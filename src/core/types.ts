@@ -9,7 +9,6 @@ export interface AccountDataType {
 
 export interface ToolType {
   name: string;
-  description: string;
   id: string;
   action: (selectedAssets: number[]) => Promise<Uint8Array[]> | void;
 }

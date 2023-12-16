@@ -30,38 +30,31 @@ import useAssetStore from "../store/assetStore";
 import useConnectionStore from "../store/connectionStore";
 import SearchWalletInput from "../components/SearchWalletInput";
 import useToolStore from "../store/toolStore";
-import SelectSubHeader from "../components/SelectSubHeader";
+import SelectSubHeader from "../components/selects/SelectSubHeader";
 
 const HOME_TOOLS = [
   {
     name: "Multi Send",
-    description: "Send ASA",
     id: "asset-send",
     action: () => {},
   },
-  // {
-  //   name: "Multi Transfer",
-  //   description: "Transfer ASA",
-  //   id: "asset-transfer",
-  //   action: (assets: number[]) => {
-  //     console.log("asset-transfer", assets);
-  //   },
-  // },
+  {
+    name: "Multi Transfer",
+    id: "asset-transfer",
+    action: () => {},
+  },
   {
     name: "Multi Opt-out",
-    description: "Opt-out ASA",
     id: "asset-opt-out",
     action: createAssetOptoutTransactions,
   },
   {
     name: "Multi Destroy",
-    description: "Destroy ASA",
     id: "asset-destroy",
     action: createAssetDestroyTransactions,
   },
   {
     name: "Multi Copy",
-    description: "Destroy ASA",
     id: "asset-copy",
     action: copyAssetIds,
   },

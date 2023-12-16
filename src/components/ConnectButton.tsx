@@ -18,12 +18,13 @@ import { FaCopy, FaWallet } from "react-icons/fa";
 // ** Utils Imports
 import { AccountDataType } from "../core/types";
 import { getAccountData, shortenAddress } from "../core/utils";
-import NetworkSelect from "./NetworkSelect";
+import NetworkSelect from "./selects/NetworkSelect";
 
 // ** Wallet Imports
 import { DeflyWalletConnect } from "@blockshake/defly-connect";
 import { DaffiWalletConnect } from "@daffiwallet/connect";
 import { PeraWalletConnect } from "@perawallet/connect";
+import useToolStore from "../store/toolStore";
 
 export default function ConnectButton() {
   const connection = useConnectionStore((state) => state);
@@ -246,6 +247,8 @@ export default function ConnectButton() {
                   onChange={(e) => {
                     connection.setWalletAddress(e.target.value as string);
                     setSwitchAccount(!switchAccount);
+                    useToolStore.getState().clearSelectedAssets();
+                    useToolStore.getState().setTool(null);
                   }}
                   inputProps={{ "aria-label": "Without label" }}
                   sx={{

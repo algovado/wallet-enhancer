@@ -32,7 +32,7 @@ import useConnectionStore from "../store/connectionStore";
 import useToolStore from "../store/toolStore";
 import { MAX_SELECT_COUNT } from "../core/constants";
 import { toast } from "react-toastify";
-import AssetSendDialog from "./AssetSendDialog";
+import AssetSendDialog from "./dialogs/AssetSendDialog";
 
 interface AssetImageCardProps {
   asset: AssetsType;

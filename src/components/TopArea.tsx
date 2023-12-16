@@ -1,6 +1,6 @@
 import { ToolSelectProps } from "../core/types";
 import SearchWalletInput from "./SearchWalletInput";
-import ToolSelect from "./ToolSelect";
+import ToolSelect from "./selects/ToolSelect";
 
 const TopArea = ({ tools, setFilteredAssets }: ToolSelectProps) => {
   return (

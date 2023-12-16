@@ -6,6 +6,7 @@ import {
   Transaction,
   makeAssetDestroyTxnWithSuggestedParamsFromObject,
   waitForConfirmation,
+  computeGroupID,
 } from "algosdk";
 import axios from "axios";
 import { CID } from "multiformats/cid";
@@ -40,11 +41,11 @@ const deflyWallet = new DeflyWalletConnect({ shouldShowSignTxnToast: true });
 const daffiWallet = new DaffiWalletConnect({ shouldShowSignTxnToast: true });
 const algodClient = new Algodv2("", NODE_URL, "");
 
-export const shortenAddress = (walletAddress: string) => {
+export const shortenAddress = (walletAddress: string, count: number = 4) => {
   return (
-    walletAddress.substring(0, 4) +
+    walletAddress.substring(0, count) +
     "..." +
-    walletAddress.substring(walletAddress.length - 4)
+    walletAddress.substring(walletAddress.length - count)
   );
 };
 
@@ -313,52 +314,51 @@ async function getCreatorWalletOfAsset(assetId: number) {
   }
 }
 
-export async function signGroupTransactions(groups: Transaction[]) {
+export async function signTransactions(
+  groups: Transaction[],
+  signer: string = ""
+) {
   let signedTxns;
   let multipleTxnGroups;
   const { walletAddress, walletType } = useConnectionStore.getState();
   if (!walletAddress) {
     throw new Error("Please connect your wallet!");
   }
+  signer = signer || walletAddress;
   try {
     if (walletType === "pera") {
       await peraWallet.reconnectSession();
       multipleTxnGroups = groups.map((txn) => {
-        return { txn: txn, signers: [walletAddress] };
+        return { txn: txn, signers: [signer] };
       });
-      if (multipleTxnGroups.length === 0) {
-        throw new Error("Transaction signing failed!");
-      }
       signedTxns = await peraWallet.signTransaction([
         multipleTxnGroups as SignTransactionsType[],
       ]);
     } else if (walletType === "defly") {
       await deflyWallet.reconnectSession();
       multipleTxnGroups = groups.map((txn) => {
-        return { txn: txn, signers: [walletAddress] };
+        return { txn: txn, signers: [signer] };
       });
-      if (multipleTxnGroups.length === 0) {
-        throw new Error("Transaction signing failed!");
-      }
       signedTxns = await deflyWallet.signTransaction([
         multipleTxnGroups as SignTransactionsType[],
       ]);
     } else if (walletType === "daffi") {
       await daffiWallet.reconnectSession();
       multipleTxnGroups = groups.map((txn) => {
-        return { txn: txn, signers: [walletAddress] };
+        return { txn: txn, signers: [signer] };
       });
-      if (multipleTxnGroups.length === 0) {
-        throw new Error("Transaction signing failed!");
-      }
       signedTxns = await daffiWallet.signTransaction([
         multipleTxnGroups as SignTransactionsType[],
       ]);
     } else {
       throw new Error("Invalid wallet type!");
     }
+    if (signedTxns.length === 0) {
+      throw new Error("Transaction signing failed!");
+    }
     return signedTxns;
   } catch (error) {
+    console.log(error);
     throw new Error("Transaction signing failed");
   }
 }
@@ -399,7 +399,7 @@ export async function createAssetOptInTransactions(assets: number[]) {
   let txnsArray = [];
   for (let i = 0; i < assets.length; i++) {
     const tx = makeAssetTransferTxnWithSuggestedParamsFromObject({
-      from: wallet,
+      from: wallet.trim(),
       to: wallet.trim(),
       amount: 0,
       assetIndex: assets[i],
@@ -408,7 +408,7 @@ export async function createAssetOptInTransactions(assets: number[]) {
     });
     txnsArray.push(tx);
   }
-  const signedTxns = await signGroupTransactions(txnsArray);
+  const signedTxns = await signTransactions(txnsArray);
   if (signedTxns == null) {
     throw new Error("Transaction signing failed");
   }
@@ -432,7 +432,7 @@ export async function createAssetOptoutTransactions(assets: number[]) {
     const creatorAddress = await getCreatorWalletOfAsset(assets[i]);
     if (creatorAddress !== "") {
       const tx = makeAssetTransferTxnWithSuggestedParamsFromObject({
-        from: wallet,
+        from: wallet.trim(),
         to: creatorAddress.trim(),
         amount: 0,
         assetIndex: assets[i],
@@ -443,7 +443,7 @@ export async function createAssetOptoutTransactions(assets: number[]) {
       txnsArray.push(tx);
     }
   }
-  const signedTxns = await signGroupTransactions(txnsArray);
+  const signedTxns = await signTransactions(txnsArray);
   if (signedTxns == null) {
     throw new Error("Transaction signing failed");
   }
@@ -467,7 +467,7 @@ export async function createAssetDestroyTransactions(assets: number[]) {
     const creatorAddress = await getCreatorWalletOfAsset(assets[i]);
     if (creatorAddress !== "") {
       let tx = makeAssetDestroyTxnWithSuggestedParamsFromObject({
-        from: wallet,
+        from: wallet.trim(),
         suggestedParams: params,
         assetIndex: assets[i],
         note: new TextEncoder().encode(TX_NOTE),
@@ -475,16 +475,14 @@ export async function createAssetDestroyTransactions(assets: number[]) {
       txnsArray.push(tx);
     }
   }
-  const signedTxns = await signGroupTransactions(txnsArray);
+  const signedTxns = await signTransactions(txnsArray);
   if (signedTxns == null) {
     throw new Error("Transaction signing failed");
   }
   return signedTxns;
 }
 
-export async function createAssetTransferTransactions(
-  assets: AssetTransferType[]
-) {
+export async function createAssetSendTransactions(assets: AssetTransferType[]) {
   if (assets.length === 0) throw new Error("Please select an asset!");
   if (assets.length > MAX_SELECT_COUNT) {
     throw new Error(
@@ -499,8 +497,8 @@ export async function createAssetTransferTransactions(
   let txnsArray = [];
   for (let i = 0; i < assets.length; i++) {
     const tx = makeAssetTransferTxnWithSuggestedParamsFromObject({
-      from: wallet,
-      to: assets[i].receiver,
+      from: wallet.trim(),
+      to: assets[i].receiver.trim(),
       amount: assets[i].amount * 10 ** assets[i].decimals,
       assetIndex: assets[i].index,
       suggestedParams: params,
@@ -508,9 +506,52 @@ export async function createAssetTransferTransactions(
     });
     txnsArray.push(tx);
   }
-  const signedTxns = await signGroupTransactions(txnsArray);
+  const signedTxns = await signTransactions(txnsArray);
   if (signedTxns == null) {
     throw new Error("Transaction signing failed");
   }
   return signedTxns;
+}
+
+export async function createAssetTransferTransactions(
+  assets: AssetTransferType[]
+) {
+  if (assets.length === 0) throw new Error("Please select an asset!");
+  if (assets.length > MAX_SELECT_COUNT / 2) {
+    throw new Error(
+      `You can only select ${MAX_SELECT_COUNT / 2} assets at a time!`
+    );
+  }
+  const wallet = useConnectionStore.getState().walletAddress;
+  if (!wallet) {
+    throw new Error("Please connect your wallet!");
+  }
+  const params = await algodClient.getTransactionParams().do();
+  let txnsArray = [];
+  for (let i = 0; i < assets.length; i++) {
+    const optin_tx = makeAssetTransferTxnWithSuggestedParamsFromObject({
+      from: assets[i].receiver.trim(),
+      to: assets[i].receiver.trim(),
+      amount: 0,
+      assetIndex: assets[i].index,
+      suggestedParams: params,
+      note: new TextEncoder().encode(TX_NOTE),
+    });
+    const send_tx = makeAssetTransferTxnWithSuggestedParamsFromObject({
+      from: wallet.trim(),
+      to: assets[i].receiver.trim(),
+      amount: assets[i].amount * 10 ** assets[i].decimals,
+      assetIndex: assets[i].index,
+      suggestedParams: params,
+      note: new TextEncoder().encode(TX_NOTE),
+    });
+    const groupID = computeGroupID([optin_tx, send_tx]);
+    optin_tx.group = groupID;
+    send_tx.group = groupID;
+    txnsArray.push([optin_tx, send_tx]);
+  }
+  if (txnsArray == null) {
+    throw new Error("Send transaction signing failed");
+  }
+  return txnsArray;
 }

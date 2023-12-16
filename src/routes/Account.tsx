@@ -31,18 +31,16 @@ import {
 import { AssetsType } from "../core/types";
 import useAssetStore from "../store/assetStore";
 import useToolStore from "../store/toolStore";
-import SelectSubHeader from "../components/SelectSubHeader";
+import SelectSubHeader from "../components/selects/SelectSubHeader";
 
 const ACCOUNT_TOOLS = [
   {
     name: "Multi Opt-in",
-    description: "Opt-in ASA",
     id: "asset-opt-in",
     action: createAssetOptInTransactions,
   },
   {
     name: "Multi Copy",
-    description: "Destroy ASA",
     id: "asset-copy",
     action: copyAssetIds,
   },

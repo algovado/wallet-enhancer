@@ -20,7 +20,7 @@ export const INDEXER_URL =
 export const IPFS_ENDPOINT = "https://ipfs.algonode.xyz/ipfs";
 export const IMAGE_404_PLACEHOLDER =
   "https://placehold.co/600x600/green/webp?font=Roboto&text=N/A";
-export const PAGE_SIZE = 36;
+export const PAGE_SIZE = 30;
 export const MAX_SELECT_COUNT = 64;
 
 export const TX_NOTE = "via Wallet Enhancer";
