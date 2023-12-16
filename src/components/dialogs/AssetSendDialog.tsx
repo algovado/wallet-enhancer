@@ -72,7 +72,7 @@ const AssetSendDialog: React.FC<AssetSendDialogProps> = ({
           decimals: asset.params.decimals,
           index: asset.index,
         },
-      ]);
+      ]) as Uint8Array[];
       await toast.promise(sendSignedTransaction(signedTxn), {
         pending: "Sending transaction...",
         success: "Transaction sent successfully 🎉",
