@@ -90,8 +90,6 @@ const AssetTransferDialog: React.FC<AssetTransferDialogProps> = ({
       const createdTxns = await createAssetTransferTransactions(
         assetsForTransfer
       );
-      // toast.info("Please sign opt-in transactions with receiver wallet");
-      // await new Promise((resolve) => setTimeout(resolve, 500));
       const optinTxns = await signTransactions(createdTxns.flat(), receiver);
       console.log(optinTxns);
       setUnsignedAssets(optinTxns);
