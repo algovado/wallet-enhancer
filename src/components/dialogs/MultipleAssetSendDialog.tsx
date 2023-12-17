@@ -82,10 +82,10 @@ const MultipleAssetSendDialog: React.FC<MultipleAssetSendDialogProps> = ({
       );
       for (let i = 0; i < signedTransactions.length; i++) {
         await toast.promise(sendSignedTransaction([signedTransactions[i]]), {
-          pending: `${assets[i]} (transaction ${i + 1}) sending...`,
+          pending: `${assets[i]} sending...`,
           success: `${assets[i]} sent 🎉`,
-          error: `${assets[i]} (transaction ${i + 1}) failed 😕`,
         });
+        toolState.removeSelectedAsset(assets[i]);
       }
       setAmount("1");
       setReceiver("");

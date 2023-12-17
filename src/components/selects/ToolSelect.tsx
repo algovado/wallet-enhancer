@@ -58,9 +58,7 @@ export default function ToolSelect({
               await toast.promise(
                 sendSignedTransaction([signedTransactions[i]]),
                 {
-                  pending: `${toolState.selectedAssets[i]}'s transaction ${
-                    i + 1
-                  } sending...`,
+                  pending: `${toolState.selectedAssets[i]}'s transaction sending...`,
                   success: `${toolState.selectedAssets[i]}'s transaction sent 🎉`,
                 }
               );

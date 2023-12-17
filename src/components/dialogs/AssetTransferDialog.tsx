@@ -161,7 +161,7 @@ const AssetTransferDialog: React.FC<AssetTransferDialogProps> = ({
               assets{" "}
             </span>
           </Tooltip>
-          selected
+          {sendLoading ? "left" : "selected"}
         </p>
         {unsignedAssets.length > 0 && (
           <Button
@@ -178,13 +178,13 @@ const AssetTransferDialog: React.FC<AssetTransferDialogProps> = ({
                   await toast.promise(sendSignedTransaction(group), {
                     pending: `${assets[i / 2]} sending...`,
                     success: `${assets[i / 2]} sent 🎉`,
-                    error: `${assets[i / 2]} failed 😕`,
                   });
+                  toolState.removeSelectedAsset(assets[i / 2]);
                 } catch (error: any) {
                   toast.error(
                     error.message.split("TransactionPool.Remember:")[1] ||
                       error.message ||
-                      "Something went wrong"
+                      `${assets[i / 2]} failed 😕`
                   );
                 }
               }
@@ -192,6 +192,7 @@ const AssetTransferDialog: React.FC<AssetTransferDialogProps> = ({
               setAmount("1");
               setReceiver("");
               setUnsignedAssets([]);
+              setSendLoading(false);
             }}
           >
             {sendLoading ? "Sending..." : "Send Transactions"}

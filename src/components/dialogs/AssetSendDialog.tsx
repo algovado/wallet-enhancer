@@ -15,6 +15,7 @@ import {
   getWalletAddressFromNFDomain,
   sendSignedTransaction,
 } from "../../core/utils";
+import useToolStore from "../../store/toolStore";
 
 interface AssetSendDialogProps {
   open: boolean;
@@ -72,11 +73,12 @@ const AssetSendDialog: React.FC<AssetSendDialogProps> = ({
           decimals: asset.params.decimals,
           index: asset.index,
         },
-      ]) as Uint8Array[];
+      ]);
       await toast.promise(sendSignedTransaction(signedTxn), {
         pending: "Sending transaction...",
         success: "Transaction sent successfully 🎉",
       });
+      useToolStore.getState().removeSelectedAsset(asset.index);
       setAmount("");
       setReceiver("");
       onClose();
@@ -84,7 +86,7 @@ const AssetSendDialog: React.FC<AssetSendDialogProps> = ({
       toast.error(
         error.message.split("TransactionPool.Remember:")[1] ||
           error.message ||
-          "Something went wrong"
+          "Something went wrong 😕"
       );
     }
     setLoading(false);
