@@ -5,15 +5,15 @@ import { MouseEvent, useEffect, useState } from "react";
 import useConnectionStore from "../store/connectionStore";
 
 // ** MUI Imports
+import { Icon, IconButton, Select } from "@mui/material";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MenuList from "@mui/material/MenuList";
 import Tooltip from "@mui/material/Tooltip";
-import { Icon, IconButton, Select } from "@mui/material";
 
-import { toast } from "react-toastify";
 import { FaCopy, FaWallet } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 // ** Utils Imports
 import { AccountDataType } from "../core/types";

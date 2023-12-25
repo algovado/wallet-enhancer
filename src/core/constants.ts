@@ -18,8 +18,7 @@ export const INDEXER_URL =
     : TESTNET_ALGONODE_INDEXER;
 
 export const IPFS_ENDPOINT = "https://ipfs.algonode.xyz/ipfs";
-export const IMAGE_404_PLACEHOLDER =
-  "https://placehold.co/600x600/green/webp?font=Roboto&text=N/A";
+
 export const PAGE_SIZE = 30;
 export const MAX_SELECT_COUNT = 64;
 

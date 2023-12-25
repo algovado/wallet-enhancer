@@ -24,7 +24,6 @@ export default function NetworkSelect() {
           <Switch
             checked={networkType === "mainnet"}
             onChange={handleChange}
-            // change unchecked color
             sx={{
               "& .MuiSwitch-thumb": {
                 backgroundColor: "#fff",

@@ -1,36 +1,40 @@
-# Getting Started with Create React App
+# Wallet Enhancer
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Wallet Enhancer is a platform to make it easier to interact with the assets (or NFTs) of Algorand blockchain.  It is a web application that allows you to manage wallets, send and receive assets, and interact with Algorand Standard Assets (ASAs).
 
-## Available Scripts
+----------
 
-In the project directory, you can run:
+## Installation
 
-### `npm start`
+You need to have [Node.js](https://nodejs.org/en/) installed on your machine.  
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Then, clone this repo:
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+```bash
+git clone https://github.com/algovado/wallet-enhancer
+```
 
-### `npm test`
+And run the following commands:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+npm install
+npm run start
+```
 
-### `npm run build`
+## Deployment
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Changes that are merged to `main` will be deployed automatically to [Wallet Enhancer](https://we.thurstober.com/).
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Contributing
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+To contribute, fork this repo and propose changes back via Pull Request.  One of the team members will review and merge your changes.  
 
-## Learn More
+## License
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+----------
+
+This project funded by Algorand Foundation's [xGov](https://xgov.algorand.foundation) program.
+
+![af](public\images\af_logo.svg)

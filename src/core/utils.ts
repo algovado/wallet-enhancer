@@ -1,18 +1,23 @@
+import { DeflyWalletConnect } from "@blockshake/defly-connect";
+import { DaffiWalletConnect } from "@daffiwallet/connect";
+import { PeraWalletConnect } from "@perawallet/connect";
 import {
+  Algodv2,
+  Transaction,
+  computeGroupID,
   decodeAddress,
   encodeAddress,
-  Algodv2,
-  makeAssetTransferTxnWithSuggestedParamsFromObject,
-  Transaction,
   makeAssetDestroyTxnWithSuggestedParamsFromObject,
+  makeAssetTransferTxnWithSuggestedParamsFromObject,
   waitForConfirmation,
-  computeGroupID,
 } from "algosdk";
 import axios from "axios";
 import { CID } from "multiformats/cid";
 import * as digest from "multiformats/hashes/digest";
 import * as mfsha2 from "multiformats/hashes/sha2";
+import { toast } from "react-toastify";
 import { decode } from "uint8-to-base64";
+import useAssetStore from "../store/assetStore";
 import useConnectionStore from "../store/connectionStore";
 import {
   INDEXER_URL,
@@ -30,11 +35,6 @@ import {
   SignTransactionsType,
   SingleAssetDataResponse,
 } from "./types";
-import { toast } from "react-toastify";
-import { PeraWalletConnect } from "@perawallet/connect";
-import { DeflyWalletConnect } from "@blockshake/defly-connect";
-import useAssetStore from "../store/assetStore";
-import { DaffiWalletConnect } from "@daffiwallet/connect";
 
 const peraWallet = new PeraWalletConnect({ shouldShowSignTxnToast: true });
 const deflyWallet = new DeflyWalletConnect({ shouldShowSignTxnToast: true });
@@ -134,12 +134,10 @@ async function fetchNFDJSON(url: string) {
     }
     const jsonData = await response.json();
     if (response.status === 429 && jsonData.length > 0) {
-      // Wait for 'secsRemaining' seconds before retrying.
       await new Promise((resolve) =>
         setTimeout(resolve, jsonData.secsRemaining * 1000)
       );
     } else {
-      // If status is not 429, return the json data and status.
       return { status: response.status, body: jsonData };
     }
   }

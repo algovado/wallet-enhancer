@@ -11,7 +11,10 @@ import Fuse from "fuse.js";
 import { useEffect, useState } from "react";
 import AssetImageCard from "../components/AssetCard";
 import GridPagination from "../components/GridPagination";
+import SearchWalletInput from "../components/SearchWalletInput";
 import TopArea from "../components/TopArea";
+import DonateDialog from "../components/dialogs/DonateDialog";
+import SelectSubHeader from "../components/selects/SelectSubHeader";
 import {
   PAGE_SIZE,
   filterByOptions,
@@ -28,9 +31,7 @@ import {
 } from "../core/utils";
 import useAssetStore from "../store/assetStore";
 import useConnectionStore from "../store/connectionStore";
-import SearchWalletInput from "../components/SearchWalletInput";
 import useToolStore from "../store/toolStore";
-import SelectSubHeader from "../components/selects/SelectSubHeader";
 
 const HOME_TOOLS = [
   {
@@ -300,6 +301,7 @@ export default function Home() {
         totalPages={totalPages}
         onChange={handlePageChange}
       />
+      <DonateDialog />
     </main>
   );
 }

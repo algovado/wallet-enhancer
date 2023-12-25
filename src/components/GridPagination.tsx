@@ -37,11 +37,11 @@ const GridPagination: React.FC<GridPaginationProps> = ({
         shape="rounded"
         sx={{
           "& .MuiPaginationItem-root": {
-            borderRadius: "none", // Adjust styling as needed
+            borderRadius: "none",
             margin: "0 2px",
             "&.Mui-selected": {
-              backgroundColor: "green", // Change selected page background color
-              color: "white", // Change selected page text color
+              backgroundColor: "green", 
+              color: "white",
             },
           },
         }}

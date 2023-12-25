@@ -33,9 +33,6 @@ export interface AssetParamsType {
   total: number;
   "unit-name": string;
   url: string;
-  "default-"?: boolean;
-  clawback?: string;
-  freeze?: string;
 }
 
 export interface SingleAssetDataResponse {

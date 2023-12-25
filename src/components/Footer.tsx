@@ -21,7 +21,7 @@ export function Footer() {
         <div className="flex flex-row items-center justify-center gap-3 sm:absolute sm:left-1/2 sm:-translate-x-1/2">
           <Tooltip title="supported by xGov">
             <a
-              href="https://xgov.algorand.foundation/"
+              href="https://xgov.algorand.foundation?ref=walletenhancer"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -35,7 +35,7 @@ export function Footer() {
             </a>
           </Tooltip>
           <a
-            href="https://algonode.io?ref=eviltools"
+            href="https://algonode.io?ref=walletenhancer"
             target="_blank"
             rel="noreferrer noopener"
             className="font-normal text-primary-gray transition text-xs text-center hover:text-white"
@@ -76,7 +76,7 @@ export function Footer() {
           </a>
           <a
             className="opacity-80 transition-opacity hover:opacity-100"
-            href="https://github.com/thurstober-digital/evil-tools"
+            href="https://github.com/algovado/wallet-enhancer"
             target="_blank"
             rel="noreferrer"
           >

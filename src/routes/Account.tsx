@@ -8,10 +8,21 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { isValidAddress } from "algosdk";
+import Fuse from "fuse.js";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import AssetImageCard from "../components/AssetCard";
+import GridPagination from "../components/GridPagination";
 import TopArea from "../components/TopArea";
+import DonateDialog from "../components/dialogs/DonateDialog";
+import SelectSubHeader from "../components/selects/SelectSubHeader";
+import {
+  PAGE_SIZE,
+  filterByOptions,
+  fuseSearchOptions,
+  orderByOptions,
+} from "../core/constants";
+import { AssetsType } from "../core/types";
 import {
   copyAssetIds,
   createAssetOptInTransactions,
@@ -19,19 +30,9 @@ import {
   getCreatedAssetsFromAddress,
   getWalletAddressFromNFDomain,
 } from "../core/utils";
-import useConnectionStore from "../store/connectionStore";
-import Fuse from "fuse.js";
-import GridPagination from "../components/GridPagination";
-import {
-  fuseSearchOptions,
-  PAGE_SIZE,
-  orderByOptions,
-  filterByOptions,
-} from "../core/constants";
-import { AssetsType } from "../core/types";
 import useAssetStore from "../store/assetStore";
+import useConnectionStore from "../store/connectionStore";
 import useToolStore from "../store/toolStore";
-import SelectSubHeader from "../components/selects/SelectSubHeader";
 
 const ACCOUNT_TOOLS = [
   {
@@ -306,6 +307,7 @@ export default function Account() {
         totalPages={totalPages}
         onChange={handlePageChange}
       />
+      <DonateDialog />
     </main>
   );
 }
