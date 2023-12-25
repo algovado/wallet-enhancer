@@ -37,4 +37,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 This project funded by Algorand Foundation's [xGov](https://xgov.algorand.foundation) program.
 
-![af](public\images\af_logo.svg)
+![af](public/images/af_logo.svg)
