@@ -4,7 +4,7 @@ Wallet Enhancer is a platform to make it easier to interact with the assets (or 
 
 This project funded by Algorand Foundation's [xGov](https://xgov.algorand.foundation) program.
 
-![af](public\images\af_logo.svg)
+![af](public/images/af_logo.svg)
 ----------
 
 ## Installation
