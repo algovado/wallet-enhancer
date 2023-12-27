@@ -3,7 +3,7 @@ import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { getWalletAddressFromNFDomain } from "../core/utils";
+import { getWalletAddressFromNfDomain } from "../core/utils";
 
 export default function SearchWalletInput() {
   const [searchWallet, setSearchWallet] = useState("");
@@ -13,7 +13,7 @@ export default function SearchWalletInput() {
     e.preventDefault();
     let walletAddress = searchWallet.trim();
     if (walletAddress.toLowerCase().includes(".algo")) {
-      const response = await getWalletAddressFromNFDomain(
+      const response = await getWalletAddressFromNfDomain(
         walletAddress.toLowerCase()
       );
       if (response.length === 58 && isValidAddress(response)) {

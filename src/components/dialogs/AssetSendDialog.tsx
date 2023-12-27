@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 import { SingleAssetDataResponse } from "../../core/types";
 import {
   createAssetSendTransactions,
-  getWalletAddressFromNFDomain,
+  getWalletAddressFromNfDomain,
   sendSignedTransaction,
 } from "../../core/utils";
 import useToolStore from "../../store/toolStore";
@@ -51,7 +51,7 @@ const AssetSendDialog: React.FC<AssetSendDialogProps> = ({
       let walletAddress = receiver.trim();
       setLoading(true);
       if (walletAddress.toLowerCase().includes(".algo")) {
-        const response = await getWalletAddressFromNFDomain(
+        const response = await getWalletAddressFromNfDomain(
           walletAddress.toLowerCase()
         );
         if (isValidAddress(response)) {

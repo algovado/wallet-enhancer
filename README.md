@@ -2,6 +2,9 @@
 
 Wallet Enhancer is a platform to make it easier to interact with the assets (or NFTs) of Algorand blockchain.  It is a web application that allows you to manage wallets, send and receive assets, and interact with Algorand Standard Assets (ASAs).
 
+This project funded by Algorand Foundation's [xGov](https://xgov.algorand.foundation) program.
+
+![af](public\images\af_logo.svg)
 ----------
 
 ## Installation
@@ -32,9 +35,3 @@ To contribute, fork this repo and propose changes back via Pull Request.  One of
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-----------
-
-This project funded by Algorand Foundation's [xGov](https://xgov.algorand.foundation) program.
-
-![af](public/images/af_logo.svg)

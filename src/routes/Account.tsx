@@ -14,7 +14,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import AssetImageCard from "../components/AssetCard";
 import GridPagination from "../components/GridPagination";
 import TopArea from "../components/TopArea";
-import DonateDialog from "../components/dialogs/DonateDialog";
+import DonationDialog from "../components/dialogs/DonationDialog";
 import SelectSubHeader from "../components/selects/SelectSubHeader";
 import {
   PAGE_SIZE,
@@ -28,7 +28,7 @@ import {
   createAssetOptInTransactions,
   getAssetsFromAddress,
   getCreatedAssetsFromAddress,
-  getWalletAddressFromNFDomain,
+  getWalletAddressFromNfDomain,
 } from "../core/utils";
 import useAssetStore from "../store/assetStore";
 import useConnectionStore from "../store/connectionStore";
@@ -153,7 +153,7 @@ export default function Account() {
       if (account) {
         let walletAddress = account.trim();
         if (walletAddress.toLowerCase().includes(".algo")) {
-          const response = await getWalletAddressFromNFDomain(
+          const response = await getWalletAddressFromNfDomain(
             walletAddress.toLowerCase()
           );
           if (isValidAddress(response)) {
@@ -307,7 +307,7 @@ export default function Account() {
         totalPages={totalPages}
         onChange={handlePageChange}
       />
-      <DonateDialog />
+      <DonationDialog />
     </main>
   );
 }

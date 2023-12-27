@@ -13,7 +13,7 @@ import AssetImageCard from "../components/AssetCard";
 import GridPagination from "../components/GridPagination";
 import SearchWalletInput from "../components/SearchWalletInput";
 import TopArea from "../components/TopArea";
-import DonateDialog from "../components/dialogs/DonateDialog";
+import DonationDialog from "../components/dialogs/DonationDialog";
 import SelectSubHeader from "../components/selects/SelectSubHeader";
 import {
   PAGE_SIZE,
@@ -301,7 +301,7 @@ export default function Home() {
         totalPages={totalPages}
         onChange={handlePageChange}
       />
-      <DonateDialog />
+      <DonationDialog />
     </main>
   );
 }

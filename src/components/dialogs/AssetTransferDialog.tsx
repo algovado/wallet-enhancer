@@ -19,7 +19,7 @@ import { toast } from "react-toastify";
 import {
   createAssetTransferTransactions,
   getAssetData,
-  getWalletAddressFromNFDomain,
+  getWalletAddressFromNfDomain,
   sendSignedTransaction,
   shortenAddress,
   signTransactions,
@@ -58,7 +58,7 @@ const AssetTransferDialog: React.FC<AssetTransferDialogProps> = ({
       let walletAddress = receiver.trim();
       setLoading(true);
       if (walletAddress.toLowerCase().includes(".algo")) {
-        const response = await getWalletAddressFromNFDomain(
+        const response = await getWalletAddressFromNfDomain(
           walletAddress.toLowerCase()
         );
         if (isValidAddress(response)) {
@@ -91,7 +91,6 @@ const AssetTransferDialog: React.FC<AssetTransferDialogProps> = ({
         assetsForTransfer
       );
       const optinTxns = await signTransactions(createdTxns.flat(), receiver);
-      console.log(optinTxns);
       setUnsignedAssets(optinTxns);
     } catch (error: any) {
       toast.error(

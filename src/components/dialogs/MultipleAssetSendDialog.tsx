@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 import {
   createAssetSendTransactions,
   getAssetData,
-  getWalletAddressFromNFDomain,
+  getWalletAddressFromNfDomain,
   sendSignedTransaction,
 } from "../../core/utils";
 import useAssetStore from "../../store/assetStore";
@@ -48,7 +48,7 @@ const MultipleAssetSendDialog: React.FC<MultipleAssetSendDialogProps> = ({
       let walletAddress = receiver.trim();
       setLoading(true);
       if (walletAddress.toLowerCase().includes(".algo")) {
-        const response = await getWalletAddressFromNFDomain(
+        const response = await getWalletAddressFromNfDomain(
           walletAddress.toLowerCase()
         );
         if (isValidAddress(response)) {

@@ -154,7 +154,7 @@ export async function getNfdDomain(wallet: string): Promise<string> {
   }
 }
 
-export async function getWalletAddressFromNFDomain(
+export async function getWalletAddressFromNfDomain(
   domain: string
 ): Promise<string> {
   try {
@@ -356,7 +356,6 @@ export async function signTransactions(
     }
     return signedTxns;
   } catch (error) {
-    console.log(error);
     throw new Error("Transaction signing failed");
   }
 }
