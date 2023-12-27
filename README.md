@@ -32,6 +32,8 @@ Changes that are merged to `main` will be deployed automatically to [Wallet Enha
 
 To contribute, fork this repo and propose changes back via Pull Request.  One of the team members will review and merge your changes.  
 
+Feel free to reach out to [bykewel](https://twitter.com/cryptolews) or [LoafPickle](https://twitter.com/LoafPickle) if you have any questions or suggestions.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
