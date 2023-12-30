@@ -101,7 +101,7 @@ export default function Home() {
     const { value } = orderBy.target;
     switch (value) {
       case "newest":
-        const newestAssets = assets.sort(
+        const newestAssets = filteredAssets.sort(
           (a, b) => b["opted-in-at-round"] - a["opted-in-at-round"]
         );
         setFilteredAssets(newestAssets);
@@ -109,7 +109,7 @@ export default function Home() {
         setCurrentPage(1);
         break;
       case "oldest":
-        const oldestAssets = assets.sort(
+        const oldestAssets = filteredAssets.sort(
           (a, b) => a["opted-in-at-round"] - b["opted-in-at-round"]
         );
         setFilteredAssets(oldestAssets);
@@ -117,13 +117,13 @@ export default function Home() {
         setCurrentPage(1);
         break;
       case "asset-id-asc":
-        const assetIdAsc = assets.sort((a, b) => a["asset-id"] - b["asset-id"]);
+        const assetIdAsc = filteredAssets.sort((a, b) => a["asset-id"] - b["asset-id"]);
         setFilteredAssets(assetIdAsc);
         setTotalPages(Math.ceil(assetIdAsc.length / PAGE_SIZE));
         setCurrentPage(1);
         break;
       case "asset-id-desc":
-        const assetIdDesc = assets.sort(
+        const assetIdDesc = filteredAssets.sort(
           (a, b) => b["asset-id"] - a["asset-id"]
         );
         setFilteredAssets(assetIdDesc);
