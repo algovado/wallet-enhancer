@@ -70,9 +70,9 @@ export function getAssetDirectionUrl(assetId: number) {
 export function getTokenDirectionURL(assetId: number) {
   const networkType = useConnectionStore.getState().networkType;
   if (networkType === "mainnet") {
-    return "https://algoexplorer.io/asset/" + assetId;
+    return "https://allo.info/asset/" + assetId;
   }
-  return "https://testnet.algoexplorer.io/asset/" + assetId;
+  return "https://testnet.explorer.perawallet.app/asset/" + assetId;
 }
 
 export async function getAssetsFromAddress(

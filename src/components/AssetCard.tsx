@@ -335,7 +335,7 @@ const AssetImageCard = ({
                     {asset["asset-id"]}
                   </a>
                   <a
-                    href={`https://algoexplorer.io/address/${assetData.params.creator}`}
+                    href={`https://allo.info/account/${assetData.params.creator}`}
                     className="ml-0.5 text-primary-gray text-sm font-medium hover:text-gray-500 transition"
                   >
                     Creator: {shortenAddress(assetData.params.creator)}
