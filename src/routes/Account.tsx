@@ -106,7 +106,9 @@ export default function Account() {
         setCurrentPage(1);
         break;
       case "asset-id-asc":
-        const assetIdAsc = filteredAssets.sort((a, b) => a["asset-id"] - b["asset-id"]);
+        const assetIdAsc = filteredAssets.sort(
+          (a, b) => a["asset-id"] - b["asset-id"]
+        );
         setFilteredAssets(assetIdAsc);
         setTotalPages(Math.ceil(assetIdAsc.length / PAGE_SIZE));
         setCurrentPage(1);
@@ -117,6 +119,12 @@ export default function Account() {
         );
         setFilteredAssets(assetIdDesc);
         setTotalPages(Math.ceil(assetIdDesc.length / PAGE_SIZE));
+        setCurrentPage(1);
+        break;
+      // filter
+      case "showAll":
+        setFilteredAssets(assets);
+        setTotalPages(Math.ceil(assets.length / PAGE_SIZE));
         setCurrentPage(1);
         break;
       case "showZero":

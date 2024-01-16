@@ -447,6 +447,38 @@ export async function createAssetOptoutTransactions(assets: number[]) {
   return signedTxns;
 }
 
+export async function createDeletedAssetOptoutTransactions(assets: number[]) {
+  if (assets.length === 0) throw new Error("Please select an asset!");
+  if (assets.length > MAX_SELECT_COUNT) {
+    throw new Error(
+      `You can only select ${MAX_SELECT_COUNT} assets at a time!`
+    );
+  }
+  const wallet = useConnectionStore.getState().walletAddress;
+  if (!wallet) {
+    throw new Error("Please connect your wallet!");
+  }
+  const params = await algodClient.getTransactionParams().do();
+  let txnsArray = [];
+  for (let i = 0; i < assets.length; i++) {
+    const tx = makeAssetTransferTxnWithSuggestedParamsFromObject({
+      from: wallet.trim(),
+      to: wallet.trim(),
+      amount: 0,
+      assetIndex: assets[i],
+      suggestedParams: params,
+      closeRemainderTo: wallet.trim(),
+      note: new TextEncoder().encode(TX_NOTE),
+    });
+    txnsArray.push(tx);
+  }
+  const signedTxns = await signTransactions(txnsArray);
+  if (signedTxns == null) {
+    throw new Error("Transaction signing failed");
+  }
+  return signedTxns;
+}
+
 export async function createAssetDestroyTransactions(assets: number[]) {
   if (assets.length === 0) throw new Error("Please select an asset!");
   if (assets.length > MAX_SELECT_COUNT) {

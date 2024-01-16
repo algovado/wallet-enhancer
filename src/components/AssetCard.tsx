@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Card,
   CardActionArea,
   CardContent,
@@ -22,6 +23,7 @@ import {
   createAssetDestroyTransactions,
   createAssetOptInTransactions,
   createAssetOptoutTransactions,
+  createDeletedAssetOptoutTransactions,
   getAssetData,
   getAssetDirectionUrl,
   getAssetType,
@@ -363,9 +365,47 @@ const AssetImageCard = ({
                   <AssetCardOptions />
                 </Box>
                 <div className="flex flex-col mt-2">
-                  <p className="ml-0.5 text-red-500 text-sm font-medium text-center mt-4">
+                  <p className="ml-0.5 text-red-500 text-sm font-medium text-center my-2">
                     DELETED
                   </p>
+                  {/* opt-out button */}
+                  <Button
+                    variant="contained"
+                    color="error"
+                    fullWidth
+                    sx={{
+                      "&:hover": { backgroundColor: "#e53935" },
+                      mt: 2,
+                      width: "50%",
+                      margin: "auto",
+                    }}
+                    onClick={async () => {
+                      try {
+                        await toast.promise(
+                          sendSignedTransaction(
+                            await createDeletedAssetOptoutTransactions([
+                              assetData.index,
+                            ])
+                          ),
+                          {
+                            pending: "Opting-out...",
+                            success: "Opted-out successfully 🎉",
+                          }
+                        );
+                        setFilteredAssets((prev) =>
+                          prev.filter((a) => a["asset-id"] !== assetData.index)
+                        );
+                      } catch (error: any) {
+                        toast.error(
+                          error.message.split("TransactionPool.Remember:")[1] ||
+                            error.message ||
+                            "Something went wrong"
+                        );
+                      }
+                    }}
+                  >
+                    Opt-out
+                  </Button>
                 </div>
               </>
             )}

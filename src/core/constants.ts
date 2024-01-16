@@ -52,6 +52,10 @@ export const orderByOptions = [
 
 export const filterByOptions = [
   {
+    label: "Show All",
+    value: "showAll",
+  },
+  {
     label: "Zero Balances",
     value: "showZero",
   },
