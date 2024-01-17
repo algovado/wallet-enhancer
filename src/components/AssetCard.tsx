@@ -369,43 +369,50 @@ const AssetImageCard = ({
                     DELETED
                   </p>
                   {/* opt-out button */}
-                  <Button
-                    variant="contained"
-                    color="error"
-                    fullWidth
-                    sx={{
-                      "&:hover": { backgroundColor: "#e53935" },
-                      mt: 2,
-                      width: "50%",
-                      margin: "auto",
-                    }}
-                    onClick={async () => {
-                      try {
-                        await toast.promise(
-                          sendSignedTransaction(
-                            await createDeletedAssetOptoutTransactions([
-                              assetData.index,
-                            ])
-                          ),
-                          {
-                            pending: "Opting-out...",
-                            success: "Opted-out successfully 🎉",
-                          }
-                        );
-                        setFilteredAssets((prev) =>
-                          prev.filter((a) => a["asset-id"] !== assetData.index)
-                        );
-                      } catch (error: any) {
-                        toast.error(
-                          error.message.split("TransactionPool.Remember:")[1] ||
-                            error.message ||
-                            "Something went wrong"
-                        );
-                      }
-                    }}
-                  >
-                    Opt-out
-                  </Button>
+                  {useConnectionStore.getState().walletAddress ===
+                    assetData.params.creator && (
+                    <Button
+                      variant="contained"
+                      color="error"
+                      fullWidth
+                      sx={{
+                        "&:hover": { backgroundColor: "#e53935" },
+                        mt: 2,
+                        width: "50%",
+                        margin: "auto",
+                      }}
+                      onClick={async () => {
+                        try {
+                          await toast.promise(
+                            sendSignedTransaction(
+                              await createDeletedAssetOptoutTransactions([
+                                assetData.index,
+                              ])
+                            ),
+                            {
+                              pending: "Opting-out...",
+                              success: "Opted-out successfully 🎉",
+                            }
+                          );
+                          setFilteredAssets((prev) =>
+                            prev.filter(
+                              (a) => a["asset-id"] !== assetData.index
+                            )
+                          );
+                        } catch (error: any) {
+                          toast.error(
+                            error.message.split(
+                              "TransactionPool.Remember:"
+                            )[1] ||
+                              error.message ||
+                              "Something went wrong"
+                          );
+                        }
+                      }}
+                    >
+                      Opt-out
+                    </Button>
+                  )}
                 </div>
               </>
             )}
