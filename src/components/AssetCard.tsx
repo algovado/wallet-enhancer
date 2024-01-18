@@ -380,7 +380,6 @@ const AssetImageCard = ({
                       margin: "auto",
                     }}
                     onClick={async () => {
-                      console.log(assetData);
                       try {
                         await toast.promise(
                           sendSignedTransaction(
