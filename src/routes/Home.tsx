@@ -205,6 +205,7 @@ export default function Home() {
         <div className="mt-4 mx-auto sm:invisible">
           <SearchWalletInput />
         </div>
+        <DonationDialog/>
       </main>
     );
   }
