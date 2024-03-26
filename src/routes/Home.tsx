@@ -202,7 +202,7 @@ export default function Home() {
           <br />
           or search an address.
         </p>
-        <div className="mt-4 mx-auto sm:invisible">
+        <div className="my-4 mx-auto sm:invisible">
           <SearchWalletInput />
         </div>
         <DonationDialog/>
