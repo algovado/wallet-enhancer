@@ -49,6 +49,9 @@ const DonationDialog = () => {
               className="mx-auto aspect-square rounded-lg hover:brightness-110 w-64"
             />
           </a>
+          <p className="text-center text-sm text-gray-200 font-roboto my-2">
+            We support ALGO, USDC, USDT, gALGO and xUSD donations.
+          </p>
           <p className="text-center text-xs text-gray-200 font-roboto my-2">
             Click/Scan the QR code or copy the address below 🙏
           </p>
