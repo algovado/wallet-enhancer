@@ -61,7 +61,7 @@ export async function getAccountData(
 export function getAssetDirectionUrl(assetId: number) {
   const networkType = useConnectionStore.getState().networkType;
   if (networkType === "mainnet") {
-    return "https://www.nftexplorer.app/asset/" + assetId;
+    return "https://allo.info/asset/" + assetId;
   } else {
     return "https://testnet.explorer.perawallet.app/assets/" + assetId;
   }
