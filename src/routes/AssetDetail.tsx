@@ -90,11 +90,11 @@ export default function AssetDetail() {
             setHolderAddress(nfd);
           }
           if (connectionState.walletAddress) {
-            const accountIsOptedIn = await getAccountAssetData(
+            const accountAssetData = await getAccountAssetData(
               Number(assetId),
               connectionState.walletAddress
             );
-            setAccountAssetData(accountIsOptedIn);
+            setAccountAssetData(accountAssetData);
           }
         }
       } catch (error) {
