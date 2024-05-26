@@ -29,6 +29,7 @@ import {
 import {
   AccountAssetsDataResponse,
   AccountDataType,
+  AssetAccountDataResponse,
   AssetTransactionsResponse,
   AssetTransferType,
   AssetsType,
@@ -156,7 +157,6 @@ export async function getAssetTraitData(assetData: SingleAssetDataResponse) {
         },
       ];
     }
-    console.log(metadata);
     return metadata;
   } catch (error) {
     console.error(error);
@@ -208,13 +208,23 @@ export async function getOwnerAddressOfAsset(assetId: number) {
   }
 }
 
-export async function checkAccountIsOptedIn(assetId: number, wallet: string) {
+export async function getAccountAssetData(
+  assetId: number,
+  wallet: string
+): Promise<AssetAccountDataResponse> {
   try {
     const url = `${INDEXER_URL}/v2/accounts/${wallet}/assets?asset-id=${assetId}&include-all=false`;
     const response = await axios.get(url);
-    return response.data.assets.length > 0;
+    if (response.data.assets.length === 0) {
+      return { amount: 0, isOptedIn: false } as AssetAccountDataResponse;
+    } else {
+      return {
+        amount: response.data.assets[0].amount,
+        isOptedIn: true,
+      } as AssetAccountDataResponse;
+    }
   } catch (error) {
-    return false;
+    return { amount: 0, isOptedIn: false } as AssetAccountDataResponse;
   }
 }
 

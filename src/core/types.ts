@@ -72,3 +72,8 @@ export interface SignTransactionsType {
   txn: Transaction;
   signers: string[];
 }
+
+export interface AssetAccountDataResponse {
+  amount: number;
+  isOptedIn: boolean;
+}

@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import useAssetStore from "../store/assetStore";
-import { SingleAssetDataResponse } from "../core/types";
+import {
+  AssetAccountDataResponse,
+  SingleAssetDataResponse,
+} from "../core/types";
 import {
   ipfsToUrl,
   getAssetData,
@@ -15,11 +18,12 @@ import {
   createAssetOptInTransactions,
   createAssetOptoutTransactions,
   sendSignedTransaction,
-  checkAccountIsOptedIn,
+  getAccountAssetData,
 } from "../core/utils";
 import { CardMedia } from "@mui/material";
 import { toast } from "react-toastify";
 import useConnectionStore from "../store/connectionStore";
+import AssetSendDialog from "../components/dialogs/AssetSendDialog";
 
 export default function AssetDetail() {
   const { assetId } = useParams<{
@@ -34,7 +38,13 @@ export default function AssetDetail() {
   const [isAssetOneToOne, setIsAssetOneToOne] = useState<boolean>(false);
   const [assetFormat, setAssetFormat] = useState<string>("");
   const [traitData, setTraitData] = useState<any>();
-  const [accountIsOptedIn, setAccountIsOptedIn] = useState<boolean>(false);
+  const [accountAssetData, setAccountAssetData] =
+    useState<AssetAccountDataResponse>({ amount: 0, isOptedIn: false });
+  const [open, setOpen] = useState(false);
+
+  const handleDialog = () => {
+    setOpen(!open);
+  };
 
   useEffect(() => {
     if (assetId && !checkAssetIdIsValid(assetId)) {
@@ -80,11 +90,11 @@ export default function AssetDetail() {
             setHolderAddress(nfd);
           }
           if (connectionState.walletAddress) {
-            const accountIsOptedIn = await checkAccountIsOptedIn(
+            const accountIsOptedIn = await getAccountAssetData(
               Number(assetId),
               connectionState.walletAddress
             );
-            setAccountIsOptedIn(accountIsOptedIn);
+            setAccountAssetData(accountIsOptedIn);
           }
         }
       } catch (error) {
@@ -178,7 +188,7 @@ export default function AssetDetail() {
             >
               Copy Id
             </button>
-            {!accountIsOptedIn ? (
+            {!accountAssetData.isOptedIn ? (
               <button
                 className="text-xs bg-gray-950 py-2 px-5 rounded-md hover:bg-gray-800 transition-all"
                 onClick={async () => {
@@ -203,6 +213,14 @@ export default function AssetDetail() {
                 }
               >
                 Opt-out
+              </button>
+            )}
+            {accountAssetData.isOptedIn && (
+              <button
+                className="text-xs bg-primary-green py-2 px-5 rounded-md hover:bg-green-800 transition-all"
+                onClick={() => handleDialog()}
+              >
+                Send
               </button>
             )}
           </div>
@@ -314,11 +332,11 @@ export default function AssetDetail() {
                           key={trait.category}
                           className="border-b border-green-900 pb-2"
                         >
-                          <p className="font-bold">
+                          <p className="font-bold text-gray-400">
                             {trait.category.replace(/_/g, " ").toUpperCase()}
                           </p>
-                          <p className="text-gray-300 break-all">
-                            {trait.name}
+                          <p className="text-gray-50 break-all">
+                            {trait.name.toUpperCase()}
                           </p>
                         </div>
                       )}
@@ -333,6 +351,12 @@ export default function AssetDetail() {
           )}
         </div>
       </div>
+      <AssetSendDialog
+        balance={accountAssetData.amount}
+        asset={assetData}
+        onClose={handleDialog}
+        open={open}
+      />
     </div>
   );
 }
