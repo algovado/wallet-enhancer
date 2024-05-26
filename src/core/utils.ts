@@ -59,20 +59,168 @@ export async function getAccountData(
 }
 
 export function getAssetDirectionUrl(assetId: number) {
+  return "/asset/" + assetId;
+}
+
+export function getWalletDirectionUrl(walletAddress: string) {
   const networkType = useConnectionStore.getState().networkType;
   if (networkType === "mainnet") {
-    return "https://allo.info/asset/" + assetId;
-  } else {
-    return "https://testnet.explorer.perawallet.app/assets/" + assetId;
+    return "https://allo.info/account/" + walletAddress;
+  }
+  return "https://testnet.explorer.perawallet.app/address/" + walletAddress;
+}
+
+export async function getAssetTraitData(assetData: SingleAssetDataResponse) {
+  try {
+    const assetFormat = findAssetFormat(assetData.params.url);
+    let assetMetadata;
+    if (assetFormat === "ARC19") {
+      assetMetadata = await getARC19AssetMetadataData(
+        assetData.params["url"],
+        assetData.params["reserve"]
+      );
+    } else if (assetFormat === "ARC69" || assetFormat === "Token") {
+      assetMetadata = await getArc69Metadata(assetData.index);
+      if (assetMetadata.attributes && !assetMetadata.properties) {
+        assetMetadata.properties = assetMetadata.attributes;
+        delete assetMetadata.attributes;
+        assetMetadata.properties = (assetMetadata.properties as any).map(
+          (attr: any) => {
+            return {
+              [attr.trait_type]: attr.value,
+            };
+          }
+        );
+      }
+    } else if (assetFormat === "ARC3") {
+      if (assetData.params["url"].startsWith("ipfs://")) {
+        assetMetadata = await axios
+          .get(
+            `${IPFS_ENDPOINT}/${assetData.params["url"].replace("ipfs://", "")}`
+          )
+          .then((res) => res.data);
+      } else {
+        assetMetadata = await axios
+          .get(assetData.params["url"])
+          .then((res) => res.data);
+      }
+    }
+    let metadata: any = [];
+    if (assetMetadata.properties) {
+      if (Object.keys(assetMetadata.properties).includes("traits")) {
+        assetMetadata.properties = assetMetadata.properties.traits;
+      }
+      for (const key in assetMetadata.properties) {
+        if (typeof assetMetadata.properties[key] === "object") {
+          for (const subKey in assetMetadata.properties[key]) {
+            metadata = [
+              ...metadata,
+              {
+                id: metadata.length,
+                category: subKey,
+                name: assetMetadata.properties[key][subKey],
+              },
+            ];
+          }
+        } else {
+          if (!key.includes("image_static")) {
+            metadata = [
+              ...metadata,
+              {
+                id: metadata.length,
+                category: key,
+                name: assetMetadata.properties[key],
+              },
+            ];
+          }
+        }
+      }
+    }
+    if (assetMetadata.description) {
+      metadata = [
+        ...metadata,
+        {
+          id: metadata.length,
+          category: "description",
+          name: assetMetadata.description,
+        },
+      ];
+    }
+    if (assetMetadata.external_url) {
+      metadata = [
+        ...metadata,
+        {
+          id: metadata.length,
+          category: "external_url",
+          name: assetMetadata.external_url,
+        },
+      ];
+    }
+    console.log(metadata);
+    return metadata;
+  } catch (error) {
+    console.error(error);
+    return [];
   }
 }
 
-export function getTokenDirectionURL(assetId: number) {
-  const networkType = useConnectionStore.getState().networkType;
-  if (networkType === "mainnet") {
-    return "https://allo.info/asset/" + assetId;
+async function getARC19AssetMetadataData(
+  url: string,
+  reserve: string
+): Promise<Record<string, string>> {
+  try {
+    let chunks = url.split("://");
+    if (chunks[0] === "template-ipfs" && chunks[1].startsWith("{ipfscid:")) {
+      const cidComponents = chunks[1].split(":");
+      const cidVersion = cidComponents[1];
+      const cidCodec = cidComponents[2];
+      let cidCodecCode;
+      if (cidCodec === "raw") {
+        cidCodecCode = 0x55;
+      } else if (cidCodec === "dag-pb") {
+        cidCodecCode = 0x70;
+      } else throw new Error("Unknown codec");
+      const addr = decodeAddress(reserve);
+      const mhdigest = digest.create(mfsha2.sha256.code, addr.publicKey);
+      if (cidVersion === "1") {
+        const cid = CID.createV1(cidCodecCode, mhdigest);
+        const response = await axios.get(`${IPFS_ENDPOINT}/${cid}`);
+        return response.data;
+      } else {
+        const cid = CID.createV0(mhdigest);
+        const response = await axios.get(`${IPFS_ENDPOINT}/${cid}`);
+        return response.data;
+      }
+    }
+    return {};
+  } catch (error) {
+    return {};
   }
-  return "https://testnet.explorer.perawallet.app/asset/" + assetId;
+}
+
+export async function getOwnerAddressOfAsset(assetId: number) {
+  try {
+    const url = `${INDEXER_URL}/v2/assets/${assetId}/balances?currency-greater-than=0`;
+    const response = await axios.get(url);
+    return response.data.balances[0].address;
+  } catch (err) {
+    return "";
+  }
+}
+
+export function findAssetFormat(url: string) {
+  if (!url) {
+    return "Token";
+  }
+  if (url.includes("template-ipfs")) {
+    return "ARC19";
+  } else if (url.includes("#arc3")) {
+    return "ARC3";
+  } else if (url.includes("ipfs://") || url.includes("ipfs/")) {
+    return "ARC69";
+  } else {
+    return "Token";
+  }
 }
 
 export async function getAssetsFromAddress(
@@ -126,31 +274,18 @@ export async function getAssetData(
   return data.data.asset as SingleAssetDataResponse;
 }
 
-async function fetchNFDJSON(url: string) {
-  while (true) {
-    const response = await fetch(url);
-    if (response.status === 404) {
-      return response;
-    }
-    const jsonData = await response.json();
-    if (response.status === 429 && jsonData.length > 0) {
-      await new Promise((resolve) =>
-        setTimeout(resolve, jsonData.secsRemaining * 1000)
-      );
-    } else {
-      return { status: response.status, body: jsonData };
-    }
-  }
-}
-
 export async function getNfdDomain(wallet: string): Promise<string> {
-  const nfdDomain = await fetchNFDJSON(
-    "https://api.nf.domains/nfd/lookup?address=" + wallet + "&view=tiny"
-  );
-  if (nfdDomain.status === 200) {
-    return nfdDomain.body.wallet.name;
-  } else {
-    return "";
+  try {
+    const nfdDomain = await axios.get(
+      "https://api.nf.domains/nfd/lookup?address=" + wallet
+    );
+    if (nfdDomain.status === 200) {
+      return nfdDomain.data[wallet].name;
+    } else {
+      return wallet;
+    }
+  } catch (error) {
+    return wallet;
   }
 }
 
@@ -173,11 +308,12 @@ export async function getWalletAddressFromNfDomain(
 
 export const ipfsToUrl = async (
   assetUrl: string,
-  assetReserve: string
+  assetReserve: string,
+  forDetail = false
 ): Promise<string> => {
   if (!assetUrl) return "";
   try {
-    const optimizer = "?optimizer=image&width=450&quality=70";
+    const optimizer = !forDetail ? "?optimizer=image&width=450&quality=70" : "";
     if (assetUrl.includes("template-ipfs")) {
       const { data, cid } = await getARC19AssetData(assetUrl, assetReserve);
       const url = data.image
@@ -287,17 +423,17 @@ export function createReserveAddressFromCid(ipfsCid: string) {
 export const getArc69Metadata = async (
   assetId: number
 ): Promise<Record<string, string>> => {
-  const data = await axios.get<AssetTransactionsResponse>(
-    `${INDEXER_URL}/assets/${assetId}/transactions?tx-type=acfg`
+  const response = await axios.get<AssetTransactionsResponse>(
+    `${INDEXER_URL}/v2/assets/${assetId}/transactions?tx-type=acfg`
   );
-  data.data.transactions.sort(
+  response.data.transactions.sort(
     (a, b) => a["confirmed-round"] - b["confirmed-round"]
   );
   const encodedMetadata =
-    data.data.transactions[data.data.transactions.length - 1].note;
+    response.data.transactions[response.data.transactions.length - 1].note;
   const text = new TextDecoder().decode(decode(encodedMetadata));
   const metadata = JSON.parse(text);
-  return metadata.properties;
+  return metadata;
 };
 
 async function getCreatorWalletOfAsset(assetId: number) {

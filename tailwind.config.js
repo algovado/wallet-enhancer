@@ -12,13 +12,14 @@ module.exports = {
         "primary-green": "#439E43",
         "secondary-gray": "#393C3A",
         "secondary-black": "#000a02",
+        "asset-detail-bg": "#1e1e1e",
       },
       fontSize: {
         xxs: "0.6rem",
       },
       fontFamily: {
         sans: ["Josefin Slab", "sans"],
-        roboto: ["Roboto", "sans-serif"]
+        roboto: ["Roboto", "sans-serif"],
       },
     },
   },

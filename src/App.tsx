@@ -6,6 +6,7 @@ import { Footer } from "./components/Footer";
 import { Header } from "./components/Header";
 import Account from "./routes/Account";
 import Home from "./routes/Home";
+import AssetDetail from "./routes/AssetDetail";
 
 const darkTheme = createTheme({
   palette: {
@@ -39,6 +40,8 @@ export default function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/account/:account" element={<Account />} />
+              <Route path="/asset/:assetId" element={<AssetDetail />} />
+              <Route path="*" element={<Home />} />
             </Routes>
           </div>
           <Footer />

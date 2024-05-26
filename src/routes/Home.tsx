@@ -205,7 +205,7 @@ export default function Home() {
         <div className="my-4 mx-auto sm:invisible">
           <SearchWalletInput />
         </div>
-        <DonationDialog/>
+        <DonationDialog />
       </main>
     );
   }
