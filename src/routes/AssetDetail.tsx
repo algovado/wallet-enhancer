@@ -15,14 +15,17 @@ import {
   createAssetOptInTransactions,
   createAssetOptoutTransactions,
   sendSignedTransaction,
+  checkAccountIsOptedIn,
 } from "../core/utils";
 import { CardMedia } from "@mui/material";
 import { toast } from "react-toastify";
+import useConnectionStore from "../store/connectionStore";
 
 export default function AssetDetail() {
   const { assetId } = useParams<{
     assetId: string;
   }>();
+  const connectionState = useConnectionStore((state) => state);
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [assetData, setAssetData] = useState<SingleAssetDataResponse>();
@@ -31,6 +34,7 @@ export default function AssetDetail() {
   const [isAssetOneToOne, setIsAssetOneToOne] = useState<boolean>(false);
   const [assetFormat, setAssetFormat] = useState<string>("");
   const [traitData, setTraitData] = useState<any>();
+  const [accountIsOptedIn, setAccountIsOptedIn] = useState<boolean>(false);
 
   useEffect(() => {
     if (assetId && !checkAssetIdIsValid(assetId)) {
@@ -75,6 +79,13 @@ export default function AssetDetail() {
             const nfd = await getNfdDomain(assetHolder);
             setHolderAddress(nfd);
           }
+          if (connectionState.walletAddress) {
+            const accountIsOptedIn = await checkAccountIsOptedIn(
+              Number(assetId),
+              connectionState.walletAddress
+            );
+            setAccountIsOptedIn(accountIsOptedIn);
+          }
         }
       } catch (error) {
         console.error(error);
@@ -83,7 +94,7 @@ export default function AssetDetail() {
     }
     if (!assetId) return;
     getData();
-  }, [assetId]);
+  }, [assetId, connectionState]);
 
   async function checkAssetIdIsValid(assetId: string) {
     return (
@@ -150,7 +161,7 @@ export default function AssetDetail() {
         {assetData.params.name}
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-8">
-        <div className="space-y-4">
+        <div className="space-y-2">
           <CardMedia
             component="img"
             alt={assetData.params.name}
@@ -160,37 +171,40 @@ export default function AssetDetail() {
             loading="lazy"
             onError={() => setAssetUrl("/images/404.webp")}
           />
-          <div className="flex justify-evenly mx-1">
+          <div className="flex justify-center gap-x-2 mx-1">
             <button
               className="text-xs bg-gray-950 py-2 px-5 rounded-md hover:bg-gray-800 transition-all"
               onClick={() => copyAssetIds([Number(assetId)])}
             >
               Copy Id
             </button>
-            <button
-              className="text-xs bg-gray-950 py-2 px-5 rounded-md hover:bg-gray-800 transition-all"
-              onClick={async () => {
-                await itemOnClick(
-                  "Opting-in...",
-                  "Opted-in successfully 🎉",
-                  createAssetOptInTransactions
-                );
-              }}
-            >
-              Opt-in
-            </button>
-            <button
-              className="text-xs bg-gray-950 py-2 px-5 rounded-md hover:bg-gray-800 transition-all"
-              onClick={async () =>
-                await itemOnClick(
-                  "Opting-out...",
-                  "Opted-out successfully 🎉",
-                  createAssetOptoutTransactions
-                )
-              }
-            >
-              Opt-out
-            </button>
+            {!accountIsOptedIn ? (
+              <button
+                className="text-xs bg-gray-950 py-2 px-5 rounded-md hover:bg-gray-800 transition-all"
+                onClick={async () => {
+                  await itemOnClick(
+                    "Opting-in...",
+                    "Opted-in successfully 🎉",
+                    createAssetOptInTransactions
+                  );
+                }}
+              >
+                Opt-in
+              </button>
+            ) : (
+              <button
+                className="text-xs bg-gray-950 py-2 px-5 rounded-md hover:bg-gray-800 transition-all"
+                onClick={async () =>
+                  await itemOnClick(
+                    "Opting-out...",
+                    "Opted-out successfully 🎉",
+                    createAssetOptoutTransactions
+                  )
+                }
+              >
+                Opt-out
+              </button>
+            )}
           </div>
           <div className="bg-[#333333] p-4 rounded-lg">
             <h2 className="text-lg font-bold mb-2">Asset Details</h2>

@@ -208,6 +208,16 @@ export async function getOwnerAddressOfAsset(assetId: number) {
   }
 }
 
+export async function checkAccountIsOptedIn(assetId: number, wallet: string) {
+  try {
+    const url = `${INDEXER_URL}/v2/accounts/${wallet}/assets?asset-id=${assetId}&include-all=false`;
+    const response = await axios.get(url);
+    return response.data.assets.length > 0;
+  } catch (error) {
+    return false;
+  }
+}
+
 export function findAssetFormat(url: string) {
   if (!url) {
     return "Token";
