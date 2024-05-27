@@ -77,3 +77,13 @@ export interface AssetAccountDataResponse {
   amount: number;
   isOptedIn: boolean;
 }
+
+interface AssetMetadataType {
+  category: string;
+  value: string;
+}
+
+export interface AssetMetadataResponse {
+  traits: AssetMetadataType[];
+  filters: AssetMetadataType[];
+}

@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import useAssetStore from "../store/assetStore";
 import {
   AssetAccountDataResponse,
+  AssetMetadataResponse,
   SingleAssetDataResponse,
 } from "../core/types";
 import {
@@ -37,7 +38,10 @@ export default function AssetDetail() {
   const [holderAddress, setHolderAddress] = useState<string>("");
   const [isAssetOneToOne, setIsAssetOneToOne] = useState<boolean>(false);
   const [assetFormat, setAssetFormat] = useState<string>("");
-  const [traitData, setTraitData] = useState<any>();
+  const [assetMetadata, setAssetMetadata] = useState<AssetMetadataResponse>({
+    traits: [],
+    filters: [],
+  });
   const [accountAssetData, setAccountAssetData] =
     useState<AssetAccountDataResponse>({ amount: 0, isOptedIn: false });
   const [open, setOpen] = useState(false);
@@ -62,7 +66,7 @@ export default function AssetDetail() {
           url = await ipfsToUrl(stateData.params.url, stateData.params.reserve);
           setAssetUrl(url);
           const traitData = await getAssetTraitData(stateData);
-          setTraitData(traitData);
+          setAssetMetadata(traitData);
           if (stateData.params.total === 1 && stateData.params.decimals === 0) {
             const assetHolder = await getOwnerAddressOfAsset(Number(assetId));
             const nfd = await getNfdDomain(assetHolder);
@@ -83,7 +87,7 @@ export default function AssetDetail() {
             response.params.total === 1 && response.params.decimals === 0
           );
           const traitData = await getAssetTraitData(response);
-          setTraitData(traitData);
+          setAssetMetadata(traitData);
           if (response.params.total === 1 && response.params.decimals === 0) {
             const assetHolder = await getOwnerAddressOfAsset(Number(assetId));
             const nfd = await getNfdDomain(assetHolder);
@@ -318,16 +322,18 @@ export default function AssetDetail() {
               </p>
             </div>
           )}
-          {traitData?.length > 0 ? (
+          {assetMetadata.traits.length > 0 && (
             <>
-              <h2 className="text-lg font-bold mb-2">Traits</h2>
+              <h2 className="text-lg font-bold mb-2 text-primary-green">
+                Traits
+              </h2>
               <div className="grid grid-cols-2 gap-4 text-xs">
-                {traitData?.map((trait: any) => (
+                {assetMetadata.traits.map((trait: any) => (
                   <>
                     {trait.category &&
                       typeof trait.category === "string" &&
-                      trait.name &&
-                      typeof trait.name === "string" && (
+                      trait.value &&
+                      typeof trait.value === "string" && (
                         <div
                           key={trait.category}
                           className="border-b border-green-900 pb-2"
@@ -336,7 +342,7 @@ export default function AssetDetail() {
                             {trait.category.replace(/_/g, " ").toUpperCase()}
                           </p>
                           <p className="text-gray-50 break-all">
-                            {trait.name.toUpperCase()}
+                            {trait.value.toUpperCase()}
                           </p>
                         </div>
                       )}
@@ -344,10 +350,35 @@ export default function AssetDetail() {
                 ))}
               </div>
             </>
-          ) : (
-            <h2 className="text-base font-semibold text-gray-400 mb-2 text-center">
-              No metadata or extra information found for this asset.
-            </h2>
+          )}
+          {assetMetadata.filters.length > 0 && (
+            <>
+              <h2 className="text-lg font-bold my-2 text-primary-green">
+                Filters
+              </h2>
+              <div className="grid grid-cols-2 gap-4 text-xs">
+                {assetMetadata.filters.map((trait: any) => (
+                  <>
+                    {trait.category &&
+                      typeof trait.category === "string" &&
+                      trait.value &&
+                      typeof trait.value === "string" && (
+                        <div
+                          key={trait.category}
+                          className="border-b border-green-900 pb-2"
+                        >
+                          <p className="font-bold text-gray-400">
+                            {trait.category.replace(/_/g, " ").toUpperCase()}
+                          </p>
+                          <p className="text-gray-50 break-all">
+                            {trait.value.toUpperCase()}
+                          </p>
+                        </div>
+                      )}
+                  </>
+                ))}
+              </div>
+            </>
           )}
         </div>
       </div>

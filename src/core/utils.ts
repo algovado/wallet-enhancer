@@ -30,6 +30,7 @@ import {
   AccountAssetsDataResponse,
   AccountDataType,
   AssetAccountDataResponse,
+  AssetMetadataResponse,
   AssetTransactionsResponse,
   AssetTransferType,
   AssetsType,
@@ -71,10 +72,18 @@ export function getWalletDirectionUrl(walletAddress: string) {
   return "https://testnet.explorer.perawallet.app/address/" + walletAddress;
 }
 
-export async function getAssetTraitData(assetData: SingleAssetDataResponse) {
+export async function getAssetTraitData(
+  assetData: SingleAssetDataResponse
+): Promise<AssetMetadataResponse> {
   try {
     const assetFormat = findAssetFormat(assetData.params.url);
+    let metadata: AssetMetadataResponse = {
+      filters: [],
+      traits: [],
+    };
+
     let assetMetadata;
+
     if (assetFormat === "ARC19") {
       assetMetadata = await getARC19AssetMetadataData(
         assetData.params["url"],
@@ -82,17 +91,6 @@ export async function getAssetTraitData(assetData: SingleAssetDataResponse) {
       );
     } else if (assetFormat === "ARC69" || assetFormat === "Token") {
       assetMetadata = await getArc69Metadata(assetData.index);
-      if (assetMetadata.attributes && !assetMetadata.properties) {
-        assetMetadata.properties = assetMetadata.attributes;
-        delete assetMetadata.attributes;
-        assetMetadata.properties = (assetMetadata.properties as any).map(
-          (attr: any) => {
-            return {
-              [attr.trait_type]: attr.value,
-            };
-          }
-        );
-      }
     } else if (assetFormat === "ARC3") {
       if (assetData.params["url"].startsWith("ipfs://")) {
         assetMetadata = await axios
@@ -106,7 +104,22 @@ export async function getAssetTraitData(assetData: SingleAssetDataResponse) {
           .then((res) => res.data);
       }
     }
-    let metadata: any = [];
+
+    if (assetMetadata.attributes && !assetMetadata.properties) {
+      assetMetadata.properties = assetMetadata.attributes;
+      delete assetMetadata.attributes;
+    }
+
+    for (const filter in assetMetadata.properties.filters){
+      metadata.filters = [
+        ...metadata.filters,
+        {
+          category: filter,
+          value: assetMetadata.properties.filters[filter],
+        },
+      ];
+    }
+
     if (assetMetadata.properties) {
       if (Object.keys(assetMetadata.properties).includes("traits")) {
         assetMetadata.properties = assetMetadata.properties.traits;
@@ -114,23 +127,21 @@ export async function getAssetTraitData(assetData: SingleAssetDataResponse) {
       for (const key in assetMetadata.properties) {
         if (typeof assetMetadata.properties[key] === "object") {
           for (const subKey in assetMetadata.properties[key]) {
-            metadata = [
-              ...metadata,
+            metadata.traits = [
+              ...metadata.traits,
               {
-                id: metadata.length,
                 category: subKey,
-                name: assetMetadata.properties[key][subKey],
+                value: assetMetadata.properties[key][subKey],
               },
             ];
           }
         } else {
           if (!key.includes("image_static")) {
-            metadata = [
-              ...metadata,
+            metadata.traits = [
+              ...metadata.traits,
               {
-                id: metadata.length,
                 category: key,
-                name: assetMetadata.properties[key],
+                value: assetMetadata.properties[key],
               },
             ];
           }
@@ -138,36 +149,38 @@ export async function getAssetTraitData(assetData: SingleAssetDataResponse) {
       }
     }
     if (assetMetadata.description) {
-      metadata = [
-        ...metadata,
+      metadata.traits = [
+        ...metadata.traits,
         {
-          id: metadata.length,
           category: "description",
-          name: assetMetadata.description,
+          value: assetMetadata.description,
         },
       ];
     }
     if (assetMetadata.external_url) {
-      metadata = [
-        ...metadata,
+      metadata.traits = [
+        ...metadata.traits,
         {
-          id: metadata.length,
           category: "external_url",
-          name: assetMetadata.external_url,
+          value: assetMetadata.external_url,
         },
       ];
     }
+    console.log(metadata);
     return metadata;
   } catch (error) {
     console.error(error);
-    return [];
+    return {
+      filters: [],
+      traits: [],
+    };
   }
 }
 
 async function getARC19AssetMetadataData(
   url: string,
   reserve: string
-): Promise<Record<string, string>> {
+): Promise<any> {
   try {
     let chunks = url.split("://");
     if (chunks[0] === "template-ipfs" && chunks[1].startsWith("{ipfscid:")) {
