@@ -13,6 +13,7 @@ module.exports = {
         "secondary-gray": "#393C3A",
         "secondary-black": "#000a02",
         "asset-detail-bg": "#1e1e1e",
+        "secondary-green": "#327A32",
       },
       fontSize: {
         xxs: "0.6rem",
