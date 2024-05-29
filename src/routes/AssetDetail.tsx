@@ -246,7 +246,7 @@ export default function AssetDetail() {
               </a>
             </p>
             <p className="text-xs">Supply: {assetData.params.total}</p>
-            <p className="text-xs">Decimals: {assetData.params.total}</p>
+            <p className="text-xs">Decimals: {assetData.params.decimals}</p>
             <p className="text-xs">
               Clawback:{" "}
               {assetData.params.clawback === "" ||
