@@ -27,6 +27,7 @@ import {
   getAssetData,
   getAssetDirectionUrl,
   getAssetType,
+  getWalletDirectionUrl,
   ipfsToUrl,
   sendSignedTransaction,
   shortenAddress,
@@ -338,7 +339,7 @@ const AssetImageCard = ({
                     {asset["asset-id"]}
                   </a>
                   <a
-                    href={`https://allo.info/account/${assetData.params.creator}`}
+                    href={getWalletDirectionUrl(assetData.params.creator)}
                     className="ml-0.5 text-primary-gray text-sm font-medium hover:text-gray-500 transition"
                   >
                     Creator: {shortenAddress(assetData.params.creator)}

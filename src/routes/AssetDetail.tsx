@@ -342,7 +342,13 @@ export default function AssetDetail() {
                             {trait.category.replace(/_/g, " ").toUpperCase()}
                           </p>
                           <p className="text-gray-50 break-all">
-                            {trait.value.toUpperCase()}
+                            {trait.value.toUpperCase().length > 80 ? (
+                              <span title={trait.value}>
+                                {trait.value.substring(0, 80)}...
+                              </span>
+                            ) : (
+                              trait.value.toUpperCase()
+                            )}
                           </p>
                         </div>
                       )}

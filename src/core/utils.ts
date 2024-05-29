@@ -65,11 +65,12 @@ export function getAssetDirectionUrl(assetId: number) {
 }
 
 export function getWalletDirectionUrl(walletAddress: string) {
-  const networkType = useConnectionStore.getState().networkType;
-  if (networkType === "mainnet") {
-    return "https://allo.info/account/" + walletAddress;
-  }
-  return "https://testnet.explorer.perawallet.app/address/" + walletAddress;
+  // const networkType = useConnectionStore.getState().networkType;
+  // if (networkType === "mainnet") {
+  //   return "/account/" + walletAddress;
+  // }
+  // return "https://testnet.explorer.perawallet.app/address/" + walletAddress;
+  return "/account/" + walletAddress;
 }
 
 export async function getAssetTraitData(
