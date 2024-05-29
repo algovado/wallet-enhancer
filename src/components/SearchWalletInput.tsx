@@ -24,8 +24,18 @@ export default function SearchWalletInput() {
         return;
       }
     } else if (!isValidAddress(walletAddress)) {
-      toast.error("Invalid wallet address!");
-      return;
+      try {
+        if (!isNaN(parseInt(walletAddress)) && Number(walletAddress) > 0) {
+          setSearchWallet("");
+          navigation(`/asset/${walletAddress}`);
+        } else {
+          toast.error("Invalid wallet address!");
+          return;
+        }
+      } catch (error) {
+        toast.error("Invalid wallet address!");
+        return;
+      }
     } else {
       setSearchWallet("");
       navigation(`/account/${walletAddress}`);
@@ -38,7 +48,7 @@ export default function SearchWalletInput() {
         id="wallet-search-input"
         type="text"
         className="px-4 py-2 w-60 rounded-l placeholder:font-roboto placeholder:text-black text-black placeholder:opacity-70 focus:outline-none"
-        placeholder="search algo or .algo address"
+        placeholder="search account or asset"
         value={searchWallet}
         onChange={(e) => setSearchWallet(e.target.value)}
       />
