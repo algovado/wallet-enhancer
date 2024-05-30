@@ -167,7 +167,6 @@ export async function getAssetTraitData(
         },
       ];
     }
-    console.log(metadata);
     return metadata;
   } catch (error) {
     console.error(error);

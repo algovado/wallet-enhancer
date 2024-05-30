@@ -341,15 +341,26 @@ export default function AssetDetail() {
                           <p className="font-bold text-gray-400">
                             {trait.category.replace(/_/g, " ").toUpperCase()}
                           </p>
-                          <p className="text-gray-50 break-all">
-                            {trait.value.toUpperCase().length > 80 ? (
-                              <span title={trait.value}>
-                                {trait.value.substring(0, 80)}...
-                              </span>
-                            ) : (
-                              trait.value.toUpperCase()
-                            )}
-                          </p>
+                          {trait.category === "external_url" ? (
+                            <a
+                              href={trait.value}
+                              target="_blank"
+                              rel="noreferrer noopener"
+                              className="text-gray-50 break-all hover:text-green-400 transition-all"
+                            >
+                              {trait.value}
+                            </a>
+                          ) : (
+                            <p className="text-gray-50 break-all">
+                              {trait.value.toUpperCase().length > 80 ? (
+                                <span title={trait.value}>
+                                  {trait.value.substring(0, 80)}...
+                                </span>
+                              ) : (
+                                trait.value.toUpperCase()
+                              )}
+                            </p>
+                          )}
                         </div>
                       )}
                   </>
