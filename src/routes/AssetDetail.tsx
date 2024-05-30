@@ -290,7 +290,7 @@ export default function AssetDetail() {
             <p className="text-xs font-semibold mt-2">
               Standard: {assetFormat} -{" "}
               <a
-                href={assetUrl}
+                href={trait.value.toLowerCase().startsWith("http") ? trait.value : `https://${trait.value}`}
                 target="_blank"
                 rel="noreferrer noopener"
                 className="underline hover:text-green-400 transition-all text-xs"
