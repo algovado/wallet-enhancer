@@ -290,7 +290,7 @@ export default function AssetDetail() {
             <p className="text-xs font-semibold mt-2">
               Standard: {assetFormat} -{" "}
               <a
-                href={trait.value.toLowerCase().startsWith("http") ? trait.value : `https://${trait.value}`}
+                href={assetUrl}
                 target="_blank"
                 rel="noreferrer noopener"
                 className="underline hover:text-green-400 transition-all text-xs"
@@ -343,7 +343,7 @@ export default function AssetDetail() {
                           </p>
                           {trait.category === "external_url" ? (
                             <a
-                              href={trait.value}
+                              href={trait.value.toLowerCase().startsWith("http") ? trait.value : `https://${trait.value}`}
                               target="_blank"
                               rel="noreferrer noopener"
                               className="text-gray-50 break-all hover:text-green-400 transition-all"
