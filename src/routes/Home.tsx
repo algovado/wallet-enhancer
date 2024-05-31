@@ -163,6 +163,20 @@ export default function Home() {
         setTotalPages(Math.ceil(showCreatedResult.length / PAGE_SIZE));
         setCurrentPage(1);
         break;
+      case "showNonCreated":
+        const nonCreatedAssetsIds = useAssetStore
+          .getState()
+          .assets.filter(
+            (asset) => asset.params.creator !== connectionState.walletAddress
+          )
+          .map((asset) => asset.index);
+        const showNonCreatedResult = assets.filter((asset) =>
+          nonCreatedAssetsIds.includes(asset["asset-id"])
+        );
+        setFilteredAssets(showNonCreatedResult);
+        setTotalPages(Math.ceil(showNonCreatedResult.length / PAGE_SIZE));
+        setCurrentPage(1);
+        break;
       default:
         break;
     }

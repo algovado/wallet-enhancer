@@ -67,4 +67,8 @@ export const filterByOptions = [
     label: "Created Assets",
     value: "showCreated",
   },
+  {
+    label: "Non-Created Assets",
+    value: "showNonCreated",
+  },
 ];
