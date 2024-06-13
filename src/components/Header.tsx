@@ -36,7 +36,7 @@ export function Header() {
               visibility: { xs: "hidden", sm: "visible" },
             }}
           >
-            <Link to="/">Wallet Enhancer</Link>
+            <Link className="text-secondary-green" to="/">Wallet Enhancer</Link>
           </Typography>
           <div className="hidden sm:block mr-2">
             <SearchWalletInput />
