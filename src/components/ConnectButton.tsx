@@ -146,7 +146,7 @@ export default function ConnectButton() {
           aria-expanded={open ? "true" : undefined}
           onClick={handleClick}
           color="success"
-          className="hover:bg-primary-green hover:text-white transition"
+          className="hover:bg-secondary-green hover:text-white transition"
         >
           <span className="font-sans">Connect</span>
         </Button>

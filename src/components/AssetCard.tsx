@@ -321,7 +321,7 @@ const AssetImageCard = ({
                     my: -1,
                   }}
                 >
-                  <span className="text-lg text-primary-green ml-0.5 font-medium flex items-center">
+                  <span className="text-lg text-secondary-green ml-0.5 font-medium flex items-center">
                     {assetData.params.name}
                   </span>
                   <AssetCardOptions />

@@ -139,7 +139,7 @@ export default function AssetDetail() {
         </h2>
         <Link
           to="/"
-          className="text-xl text-primary-green hover:underline mt-2 transition-colors"
+          className="text-xl text-secondary-green hover:underline mt-2 transition-colors"
         >
           Go to Home
         </Link>
@@ -221,7 +221,7 @@ export default function AssetDetail() {
             )}
             {accountAssetData.isOptedIn && (
               <button
-                className="text-xs bg-primary-green py-2 px-5 rounded-md hover:bg-green-800 transition-all"
+                className="text-xs bg-secondary-green py-2 px-5 rounded-md hover:bg-green-800 transition-all"
                 onClick={() => handleDialog()}
               >
                 Send
@@ -324,7 +324,7 @@ export default function AssetDetail() {
           )}
           {assetMetadata.traits.length > 0 && (
             <>
-              <h2 className="text-lg font-bold mb-2 text-primary-green">
+              <h2 className="text-lg font-bold mb-2 text-secondary-green">
                 Traits
               </h2>
               <div className="grid grid-cols-2 gap-4 text-xs">
@@ -370,7 +370,7 @@ export default function AssetDetail() {
           )}
           {assetMetadata.filters.length > 0 && (
             <>
-              <h2 className="text-lg font-bold my-2 text-primary-green">
+              <h2 className="text-lg font-bold my-2 text-secondary-green">
                 Filters
               </h2>
               <div className="grid grid-cols-2 gap-4 text-xs">

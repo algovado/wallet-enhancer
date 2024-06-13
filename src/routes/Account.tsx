@@ -223,7 +223,7 @@ export default function Account() {
         </h1>
         <Link
           to="/"
-          className="text-xl text-primary-green hover:underline mt-2 transition-colors"
+          className="text-xl text-secondary-green hover:underline mt-2 transition-colors"
         >
           Go to Home
         </Link>

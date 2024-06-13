@@ -54,9 +54,9 @@ export default function SearchWalletInput() {
       />
       <button
         type="submit"
-        className="flex items-center justify-center rounded-r px-4 bg-primary-green"
+        className="flex items-center justify-center rounded-r px-4 bg-secondary-green"
       >
-        <FaSearch className="text-white" />
+        <FaSearch className="text-black" />
       </button>
     </form>
   );
