@@ -221,7 +221,7 @@ export default function AssetDetail() {
             )}
             {accountAssetData.isOptedIn && (
               <button
-                className="text-xs bg-secondary-green py-2 px-5 rounded-md hover:bg-green-800 transition-all"
+                className="text-xs bg-secondary-green text-black font-semibold py-2 px-5 rounded-md hover:bg-green-800 transition-all"
                 onClick={() => handleDialog()}
               >
                 Send

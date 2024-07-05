@@ -443,9 +443,7 @@ export function createReserveAddressFromCid(ipfsCid: string) {
   const decoded = CID.parse(ipfsCid);
   const version = decoded.version;
   const codec = codeToCodec(decoded.code);
-  if (version === 0) {
-    throw new Error("CID version 0 does not support directories");
-  }
+
   const assetURL = `template-ipfs://{ipfscid:${version}:${codec}:reserve:sha2-256}`;
   const reserveAddress = encodeAddress(
     Uint8Array.from(Buffer.from(decoded.multihash.digest))
