@@ -7,11 +7,13 @@ import {
   computeGroupID,
   decodeAddress,
   encodeAddress,
+  encodeUnsignedTransaction,
   makeAssetDestroyTxnWithSuggestedParamsFromObject,
   makeAssetTransferTxnWithSuggestedParamsFromObject,
   waitForConfirmation,
 } from "algosdk";
 import axios from "axios";
+import LuteConnect from "lute-connect";
 import { CID } from "multiformats/cid";
 import * as digest from "multiformats/hashes/digest";
 import * as mfsha2 from "multiformats/hashes/sha2";
@@ -41,6 +43,7 @@ import {
 const peraWallet = new PeraWalletConnect({ shouldShowSignTxnToast: true });
 const deflyWallet = new DeflyWalletConnect({ shouldShowSignTxnToast: true });
 const daffiWallet = new DaffiWalletConnect({ shouldShowSignTxnToast: true });
+const luteWallet = new LuteConnect("Wallet Enhancer");
 const algodClient = new Algodv2("", NODE_URL, "");
 
 export const shortenAddress = (walletAddress: string, count: number = 4) => {
@@ -111,7 +114,7 @@ export async function getAssetTraitData(
       delete assetMetadata.attributes;
     }
 
-    for (const filter in assetMetadata.properties.filters){
+    for (const filter in assetMetadata.properties.filters) {
       metadata.filters = [
         ...metadata.filters,
         {
@@ -515,6 +518,16 @@ export async function signTransactions(
       signedTxns = await daffiWallet.signTransaction([
         multipleTxnGroups as SignTransactionsType[],
       ]);
+    } else if (walletType === "lute") {
+      multipleTxnGroups = groups.map((txn) => {
+        return {
+          txn: Buffer.from(encodeUnsignedTransaction(txn)).toString("base64"),
+          signers: [signer],
+        };
+      });
+      signedTxns = (await luteWallet.signTxns(multipleTxnGroups)).filter(
+        (txn) => txn
+      ) as Uint8Array[];
     } else {
       throw new Error("Invalid wallet type!");
     }
@@ -750,4 +763,8 @@ export async function createAssetTransferTransactions(
     throw new Error("Send transaction signing failed");
   }
   return txnsArray;
+}
+
+export async function getGenesis() {
+  return await algodClient.genesis().do();
 }
