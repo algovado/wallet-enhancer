@@ -8,8 +8,10 @@ interface ConnectionState {
   setWalletAddress: (walletAddress: string) => void;
   networkType: "mainnet" | "testnet";
   setNetworkType: (networkType: "mainnet" | "testnet") => void;
-  walletType: "pera" | "defly" | "daffi" | null;
-  setWalletType: (walletType: "pera" | "defly" | "daffi" | null) => void;
+  walletType: "pera" | "defly" | "daffi" | "lute" | null;
+  setWalletType: (
+    walletType: "pera" | "defly" | "daffi" | "lute" | null
+  ) => void;
   disconnect: () => void;
 }
 
